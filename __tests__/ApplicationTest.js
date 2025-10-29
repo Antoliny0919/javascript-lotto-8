@@ -191,3 +191,47 @@ describe('당첨 번호 입력 예외 테스트', () => {
     await expect(app.run()).rejects.toThrow('[ERROR] 중복된 당첨 번호가 존재합니다.');
   })
 });
+
+describe('보너스 번호 입력 예외 테스트', () => {
+  const PURCHASE_AMOUNT = '1000';
+  const WINNING_LOTTO_NUMBERS = '1,5,10,15,20,25';
+  const RANDOM_LOTTO_NUMBER = [1, 2, 3, 4, 5, 6];
+
+  test.each(
+    ['십칠', '11.11', '**', 'seven', ',', '*,&,']
+  )('숫자가 아닌 입력 예외', async(input) => {
+    mockQuestions([PURCHASE_AMOUNT, WINNING_LOTTO_NUMBERS, input]);
+    mockRandoms([RANDOM_LOTTO_NUMBER]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 보너스 번호는 정수만 입력 가능합니다.');
+  });
+
+  test.each(
+    ['-1', '99', '0', '46', '', '         ']
+  )('1 ~ 45 이내 숫자가 아닌 입력 예외', async(input) => {
+    mockQuestions([PURCHASE_AMOUNT, WINNING_LOTTO_NUMBERS, input]);
+    mockRandoms([RANDOM_LOTTO_NUMBER]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 보너스 번호는 1이상 45이하인 숫자여야 합니다.');
+  });
+
+  test.each(
+    [
+      ['1,2,3,4,5,6', '1'],
+      ['5,9,14,16,19,24', '16'],
+      ['1,10,18,25,30,34', '34'],
+      ['1,33,34,40,41,45', '45'],
+    ]
+  )('당첨 번호와 중복되는 입력 예외', async(winningNumbers, bonnusNumber) => {
+    mockQuestions([PURCHASE_AMOUNT, winningNumbers, bonnusNumber]);
+    mockRandoms([RANDOM_LOTTO_NUMBER]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.');
+  });
+});
