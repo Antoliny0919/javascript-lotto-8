@@ -18,6 +18,7 @@ class App {
     const purchaseAmountInput = await Console.readLineAsync('구입금액을 입력해 주세요.');
     const purchaseAmount = Number(purchaseAmountInput);
     this.validatePurchaseAmount(purchaseAmount);
+    const purchaseLottoCount = purchaseAmount / 1000;
   }
 }
 
