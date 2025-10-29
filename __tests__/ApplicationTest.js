@@ -183,7 +183,7 @@ describe('당첨 번호 입력 예외 테스트', () => {
       '1,1,1,1,1,1',
     ]
   )('중복된 번호 입력 예외', async(input) => {
-        mockQuestions([PURCHASE_AMOUNT, input]);
+    mockQuestions([PURCHASE_AMOUNT, input]);
     mockRandoms([RANDOM_LOTTO_NUMBER]);
 
     const app = new App();
