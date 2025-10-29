@@ -89,4 +89,71 @@ describe('LottoMachine Tests', () => {
       fifth: 0,
     });
   });
+
+  test('총 수익 계산 테스트', () => {
+    Random.pickUniqueNumbersInRange
+    .mockReturnValueOnce([1, 2, 3, 4, 5, 6]) // 3등
+    .mockReturnValueOnce([3, 4, 5, 6, 7, 8]) // 4등
+
+    const lottoMachine = new LottoMachine(2);
+    const winningLotto = new WinningLotto([2, 3, 4, 5, 6, 10], 11);
+
+    expect(lottoMachine.calculateTotalPrize()).toBe(0);
+
+    lottoMachine.checkWinning(winningLotto)
+
+    expect(lottoMachine.calculateTotalPrize()).toBe(1_550_000);
+  });
+
+  test.each(
+    [
+      {
+        lottoNumbers: [[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12]],
+        winningLottoNumbers: [4, 5, 6, 7, 8, 9],
+        bonusNumber: 11,
+        expectedRateOfReturn: '2,750.0',
+      },
+      {
+        lottoNumbers: [[1, 2, 3, 4, 5, 6], [38, 39, 40, 41, 42, 43]],
+        winningLottoNumbers: [20, 21, 22, 23, 24, 25],
+        bonusNumber: 1,
+        expectedRateOfReturn: '0.0',
+      },
+      {
+        lottoNumbers: [
+          [1, 2, 3, 4, 5, 6],
+          [1, 2, 3, 11, 12, 13],
+          [1, 2, 3, 21, 22, 23],
+          [1, 2, 3, 31, 32, 33],
+          [1, 2, 3, 41, 42, 43],
+          [1, 2, 3, 11, 22, 33],
+          [1, 2, 3, 12, 22, 32],
+        ],
+        winningLottoNumbers: [1, 2, 7, 8, 9, 10],
+        bonusNumber: 4,
+        expectedRateOfReturn: '71.4',
+      },
+      {
+        lottoNumbers: [
+          [1, 2, 3, 4, 5, 6],
+          [4, 5, 6, 7, 8, 9],
+          [10, 11, 12, 13, 14, 15]
+        ],
+        winningLottoNumbers: [1, 2, 3, 4, 5, 6],
+        bonusNumber: 7,
+        expectedRateOfReturn: '66,668,333.3',
+      }
+    ]
+  )('수익률 계산 테스트', ({ lottoNumbers, winningLottoNumbers, bonusNumber, expectedRateOfReturn }) => {
+    for ( numbers of lottoNumbers ) {
+      Random.pickUniqueNumbersInRange.mockReturnValueOnce(numbers)
+    }
+
+    const lottoMachine = new LottoMachine(lottoNumbers.length);
+    const winningLotto = new WinningLotto(winningLottoNumbers, bonusNumber);
+
+    lottoMachine.checkWinning(winningLotto)
+
+    expect(lottoMachine.calculateRateOfReturn()).toBe(expectedRateOfReturn);
+  });
 });
