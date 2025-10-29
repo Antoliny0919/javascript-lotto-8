@@ -14,5 +14,8 @@ describe('로또 클래스 테스트', () => {
     }).toThrow('[ERROR]');
   });
 
-  // TODO: 추가 기능 구현에 따른 테스트 코드 작성
+  test('로또 번호 오름차순 정렬 테스트', () => {
+    const lotto = new Lotto([43, 11, 38, 15, 1, 4]);
+    expect(lotto.getNumbers()).toEqual([1, 4, 11, 15, 38, 43]);
+  });
 });
