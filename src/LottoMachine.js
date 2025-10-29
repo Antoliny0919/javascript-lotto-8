@@ -14,7 +14,6 @@ class LottoMachine {
   }
 
   printLottos() {
-    Console.print(`${this.lottos.length}개를 구매했습니다.`);
     this.lottos.forEach((lotto) => {
       const lottoNumbers = lotto.getNumbers();
       Console.print(`[${lottoNumbers.join(', ')}]`);

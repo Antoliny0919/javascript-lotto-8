@@ -20,6 +20,7 @@ class App {
     const purchaseAmount = Number(purchaseAmountInput);
     this.validatePurchaseAmount(purchaseAmount);
     const purchaseLottoCount = purchaseAmount / 1000;
+    Console.print(`${purchaseLottoCount}개를 구매했습니다.`);
     const lottoMachine = new LottoMachine(purchaseLottoCount);
     lottoMachine.printLottos();
   }

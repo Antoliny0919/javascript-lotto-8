@@ -31,7 +31,6 @@ describe('LottoMachine Tests', () => {
     lottoMachine.printLottos();
 
     expect(Console.print).toHaveBeenCalled();
-    expect(Console.print).toHaveBeenCalledWith('2개를 구매했습니다.');
     expect(Console.print).toHaveBeenCalledWith('[10, 11, 12, 13, 14, 15]');
     expect(Console.print).toHaveBeenCalledWith('[20, 21, 22, 23, 24, 25]');
   });
