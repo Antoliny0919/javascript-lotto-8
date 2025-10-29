@@ -58,6 +58,8 @@ class App {
     const bonnusNumber = Number(bonnusNumberInput);
     this.validateBonusNumber(bonnusNumber, winningNumbers);
     const winningLotto = new WinningLotto(winningNumbers, bonnusNumber);
+    lottoMachine.checkWinning(winningLotto);
+    lottoMachine.printResult();
   }
 }
 

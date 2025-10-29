@@ -1,6 +1,16 @@
 import { Random, Console } from '@woowacourse/mission-utils';
 import { Lotto } from './Lotto.js';
 
+const createPrizeMessage = (startMessage, prize, count) => `${startMessage} (${prize.toLocaleString()}원) - ${count}개`;
+
+const LOTTO_RESULT_START_MESSAGE = {
+  first: '6개 일치',
+  second: '5개 일치, 보너스 볼 일치',
+  third: '5개 일치',
+  forth: '4개 일치',
+  fifth: '3개 일치',
+}
+
 const LOTTO_PRIZE = {
   first: 2_000_000_000,
   second: 30_000_000,
@@ -33,6 +43,21 @@ class LottoMachine {
       const lottoNumbers = lotto.getNumbers();
       Console.print(`[${lottoNumbers.join(', ')}]`);
     });
+  }
+
+  printResult() {
+    Console.print('\n당첨 통계');
+    Console.print('---');
+    const places = Object.keys(this.result).reverse();
+    for (const place of places) {
+      const matchResultMessage = createPrizeMessage(
+        LOTTO_RESULT_START_MESSAGE[place],
+        LOTTO_PRIZE[place],
+        this.result[place],
+      )
+      Console.print(matchResultMessage);
+    }
+    Console.print(`총 수익률은 ${this.calculateRateOfReturn()}%입니다.`)
   }
 
   updateResult(matchCount, matchBonus) {

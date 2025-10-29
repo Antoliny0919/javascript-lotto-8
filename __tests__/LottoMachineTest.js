@@ -156,4 +156,25 @@ describe('LottoMachine Tests', () => {
 
     expect(lottoMachine.calculateRateOfReturn()).toBe(expectedRateOfReturn);
   });
+
+  test('결과 출력 테스트', () => {
+    const lottoMachine = new LottoMachine(50);
+    lottoMachine.result = {
+      first: 0,
+      second: 0,
+      third: 1,
+      forth: 2,
+      fifth: 3,
+    }
+    lottoMachine.printResult();
+
+    expect(Console.print).toHaveBeenCalledWith('\n당첨 통계');
+    expect(Console.print).toHaveBeenCalledWith('---');
+    expect(Console.print).toHaveBeenCalledWith('3개 일치 (5,000원) - 3개');
+    expect(Console.print).toHaveBeenCalledWith('4개 일치 (50,000원) - 2개');
+    expect(Console.print).toHaveBeenCalledWith('5개 일치 (1,500,000원) - 1개');
+    expect(Console.print).toHaveBeenCalledWith('5개 일치, 보너스 볼 일치 (30,000,000원) - 0개');
+    expect(Console.print).toHaveBeenCalledWith('6개 일치 (2,000,000,000원) - 0개');
+    expect(Console.print).toHaveBeenCalledWith('총 수익률은 3,230.0%입니다.');
+  });
 });
