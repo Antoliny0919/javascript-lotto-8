@@ -1,5 +1,6 @@
 import { Console, Random } from '@woowacourse/mission-utils';
 import LottoMachine from './LottoMachine.js';
+import { WinningLotto } from './Lotto.js';
 
 class App {
 
@@ -56,6 +57,7 @@ class App {
     const bonnusNumberInput = await Console.readLineAsync('\n보너스 번호를 입력해 주세요.\n');
     const bonnusNumber = Number(bonnusNumberInput);
     this.validateBonusNumber(bonnusNumber, winningNumbers);
+    const winningLotto = new WinningLotto(winningNumbers, bonnusNumber);
   }
 }
 

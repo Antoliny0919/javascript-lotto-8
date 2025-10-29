@@ -1,6 +1,6 @@
 import { Random, Console } from '@woowacourse/mission-utils';
 import LottoMachine from '../src/LottoMachine.js';
-import Lotto from '../src/Lotto.js';
+import { Lotto } from '../src/Lotto.js';
 
 jest.mock('@woowacourse/mission-utils', () => ({
   Random: {
