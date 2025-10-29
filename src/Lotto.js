@@ -30,4 +30,8 @@ export class WinningLotto extends Lotto {
   getNumbers() {
     return [...super.getNumbers(), this.#bonusNumber];
   }
+
+  getBonusNumber() {
+    return this.#bonusNumber;
+  }
 }
