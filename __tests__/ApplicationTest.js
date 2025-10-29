@@ -121,3 +121,73 @@ describe('구입금액 입력 예외 테스트', () => {
     await expect(app.run()).rejects.toThrow('[ERROR] 구입금액은 1,000원 단위여야 합니다.');
   });
 });
+
+describe('당첨 번호 입력 예외 테스트', () => {
+
+  const PURCHASE_AMOUNT = '1000'
+  const RANDOM_LOTTO_NUMBER = [1, 2, 3, 4, 5, 6];
+
+  test.each([
+    '십칠,십구,하나,둘,넷,여섯',
+    'one,two,three,four,five,six,seven',
+    '@@%&&%^^&',
+    '0.1,0.2,0.3,0.4,0.5,0.6',
+  ])('숫자가 아닌 입력 예외', async(input) => {
+    mockQuestions([PURCHASE_AMOUNT, input]);
+    mockRandoms([RANDOM_LOTTO_NUMBER]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 당첨 번호는 정수만 입력 가능합니다.');
+  });
+
+  test.each(
+    [
+      '43,11,42,12,18,33,1',
+      '1,2',
+      '1,3,5',
+      '',
+    ]
+  )(',을 기준으로 6개 숫자가 아닌 입력 예외', async(input) => {
+    mockQuestions([PURCHASE_AMOUNT, input]);
+    mockRandoms([RANDOM_LOTTO_NUMBER]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 당첨 번호는 ,을 기준으로 6개 숫자만 입력해 주세요.');
+  });
+
+  test.each(
+    [
+      '0,1,2,3,4,5',
+      '1,5,8,11,13,66',
+      '-1,5,7,9,10,-13',
+      '1, ,2,3,4,5',
+      ' , , , , , ',
+      '100000,20000,30000,44000,5000,6000',
+      '-1,-2,-3,-4,-5,-6',
+    ]
+  )(',을 기준으로 6개 숫자가 아닌 입력 예외', async(input) => {
+    mockQuestions([PURCHASE_AMOUNT, input]);
+    mockRandoms([RANDOM_LOTTO_NUMBER]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 당첨 번호는 1이상 45이하인 숫자여야 합니다.');
+  });
+
+  test.each(
+    [
+      '1,2,3,4,5,1',
+      '11,22,33,44,11,22',
+      '1,1,1,1,1,1',
+    ]
+  )('중복된 번호 입력 예외', async(input) => {
+        mockQuestions([PURCHASE_AMOUNT, input]);
+    mockRandoms([RANDOM_LOTTO_NUMBER]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 중복된 당첨 번호가 존재합니다.');
+  })
+});
