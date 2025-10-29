@@ -95,3 +95,29 @@ describe("로또 테스트", () => {
     await runException("1000j");
   });
 });
+
+describe("구입금액 입력 예외 테스트", () => {
+  test.each(['1000원', '천원', '1thousand', '**&^#@', '1.32', '1000.32'])('정수가 아닌 입력 예외', async(input) => {
+    mockQuestions([input]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 구입금액은 정수여야 합니다.');
+  });
+
+  test.each(['-1000', '0', '-1'])('양수가 아닌 입력 예외', async(input) => {
+    mockQuestions([input]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 구입금액은 양수여야 합니다.');
+  });
+
+  test.each(['1500', '3421', '10040', '1001', '500', '1000400'])('1,000원 단위가 아닌 엽력 예외', async(input) => {
+    mockQuestions([input]);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow('[ERROR] 구입금액은 1,000원 단위여야 합니다.');
+  });
+});
