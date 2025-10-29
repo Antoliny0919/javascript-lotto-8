@@ -1,5 +1,5 @@
 import { Console, Random } from '@woowacourse/mission-utils';
-import LottoMachine from './LottoMachine';
+import LottoMachine from './LottoMachine.js';
 
 class App {
 
@@ -21,7 +21,7 @@ class App {
     this.validatePurchaseAmount(purchaseAmount);
     const purchaseLottoCount = purchaseAmount / 1000;
     const lottoMachine = new LottoMachine(purchaseLottoCount);
-    console.log(lottoMachine.lottos);
+    lottoMachine.printLottos();
   }
 }
 

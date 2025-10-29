@@ -1,10 +1,13 @@
-import { Random } from '@woowacourse/mission-utils';
+import { Random, Console } from '@woowacourse/mission-utils';
 import LottoMachine from '../src/LottoMachine.js';
 import Lotto from '../src/Lotto.js';
 
 jest.mock('@woowacourse/mission-utils', () => ({
   Random: {
     pickUniqueNumbersInRange: jest.fn(),
+  },
+  Console: {
+    print: jest.fn(),
   },
 }));
 
@@ -18,4 +21,18 @@ describe('LottoMachine Tests', () => {
     expect(lotto).toBeInstanceOf(Lotto);
     expect(lotto.getNumbers()).toEqual([1, 2, 3, 4, 5, 6]);
   })
+
+  test('발행한 로또 출력 테스트', () => {
+    Random.pickUniqueNumbersInRange
+    .mockReturnValueOnce([10, 11, 12, 13, 14, 15])
+    .mockReturnValueOnce([20, 21, 22, 23, 24, 25]);
+
+    const lottoMachine = new LottoMachine(2);
+    lottoMachine.printLottos();
+
+    expect(Console.print).toHaveBeenCalled();
+    expect(Console.print).toHaveBeenCalledWith('2개를 구매했습니다.');
+    expect(Console.print).toHaveBeenCalledWith('[10, 11, 12, 13, 14, 15]');
+    expect(Console.print).toHaveBeenCalledWith('[20, 21, 22, 23, 24, 25]');
+  });
 })
