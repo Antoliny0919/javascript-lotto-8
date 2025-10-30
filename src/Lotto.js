@@ -1,3 +1,6 @@
+import { BONUS_NUMBER_ERROR_MESSAGES, LOTTO_ERROR_MESSAGES } from './constants/Messages.js';
+import { LOTTO_CONFIG } from './constants/lotto.js';
+
 export class Lotto {
   #numbers;
 
@@ -8,16 +11,16 @@ export class Lotto {
 
   #validate(numbers) {
     if (numbers.some((number) => !Number.isInteger(number))) {
-      throw new Error('[ERROR] 로또 번호는 정수만 입력 가능합니다.');
+      throw new Error(LOTTO_ERROR_MESSAGES.INVALID_TYPE);
     }
-    if (numbers.length !== 6) {
-      throw new Error('[ERROR] 로또 번호는 6개여야 합니다.');
+    if (numbers.length !== LOTTO_CONFIG.LENGTH) {
+      throw new Error(LOTTO_ERROR_MESSAGES.INVALID_LENGTH);
     }
-    if (numbers.some((number) => number < 1 || number > 45)) {
-      throw new Error('[ERROR] 로또 번호는 1이상 45이하인 숫자여야 합니다.');
+    if (numbers.some((number) => number < LOTTO_CONFIG.START_NUMBER || number > LOTTO_CONFIG.END_NUMBER)) {
+      throw new Error(LOTTO_ERROR_MESSAGES.INVALID_NUMBER_RANGE);
     }
-    if (new Set(numbers).size !== 6) {
-      throw new Error('[ERROR] 중복된 당첨 번호가 존재합니다.');
+    if (new Set(numbers).size !== LOTTO_CONFIG.LENGTH) {
+      throw new Error(LOTTO_ERROR_MESSAGES.INVALID_DUPLICATE_NUMBER);
     }
   }
 
@@ -40,13 +43,13 @@ export class WinningLotto {
 
   #validateBonusNumber(numbers, bonusNumber) {
     if (!Number.isInteger(bonusNumber)) {
-      throw new Error('[ERROR] 보너스 번호는 정수만 입력 가능합니다.');
+      throw new Error(BONUS_NUMBER_ERROR_MESSAGES.INVALID_TYPE);
     }
-    if (bonusNumber < 1 || bonusNumber > 45) {
-      throw new Error('[ERROR] 보너스 번호는 1이상 45이하인 숫자여야 합니다.');
+    if (bonusNumber < LOTTO_CONFIG.START_NUMBER || bonusNumber > LOTTO_CONFIG.END_NUMBER) {
+      throw new Error(BONUS_NUMBER_ERROR_MESSAGES.INVALID_NUMBER_RANGE);
     }
     if (numbers.includes(bonusNumber)) {
-      throw new Error('[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.');
+      throw new Error(BONUS_NUMBER_ERROR_MESSAGES.INVALID_DUPLICATE);
     }
   }
 

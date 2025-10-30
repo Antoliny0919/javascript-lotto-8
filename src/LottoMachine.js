@@ -1,32 +1,16 @@
 import { Random, Console } from '@woowacourse/mission-utils';
+import { LOTTO_PRIZE, LOTTO_RESULT_START_MESSAGE } from './constants/LottoMachine.js';
+import { LOTTO_CONFIG } from './constants/lotto.js';
+import { LOTTO_MACHINE_CONFIG, MESSAGES, ERROR_MESSAGES } from './constants/LottoMachine.js';
+import { lottoCountTemplate, rateOfReturnTemplate, matchResultTemplate } from './utils/Templates.js';
 import { Lotto } from './Lotto.js';
-
-const createPrizeMessage = (startMessage, prize, count) => {
-  return `${startMessage} (${prize.toLocaleString()}원) - ${count}개`;
-}
-
-const LOTTO_RESULT_START_MESSAGE = {
-  first: '6개 일치',
-  second: '5개 일치, 보너스 볼 일치',
-  third: '5개 일치',
-  forth: '4개 일치',
-  fifth: '3개 일치',
-}
-
-const LOTTO_PRIZE = {
-  first: 2_000_000_000,
-  second: 30_000_000,
-  third: 1_500_000,
-  forth: 50_000,
-  fifth: 5_000,
-}
 
 class LottoMachine {
   #lottoCount;
 
   constructor(paymentAmount) {
     this.#validatePaymentAmount(paymentAmount);
-    this.#lottoCount = paymentAmount / 1000;
+    this.#lottoCount = paymentAmount / LOTTO_CONFIG.PRICE;
     this.lottos = Array.from(
       { length: this.#lottoCount },
       () => this.createLotto(),
@@ -43,22 +27,26 @@ class LottoMachine {
 
   #validatePaymentAmount(paymentAmount) {
     if (!Number.isInteger(paymentAmount)) {
-      throw new Error('[ERROR] 구입금액은 정수여야 합니다.');
+      throw new Error(ERROR_MESSAGES.INVALID_TYPE);
     }
     if (paymentAmount <= 0) {
-      throw new Error('[ERROR] 구입금액은 양수여야 합니다.');
+      throw new Error(ERROR_MESSAGES.INVALID_NEGATIVE_NUMBER);
     }
-    if (paymentAmount % 1000) {
-      throw new Error('[ERROR] 구입금액은 1,000원 단위여야 합니다.');
+    if (paymentAmount % LOTTO_CONFIG.PRICE) {
+      throw new Error(ERROR_MESSAGES.INVALID_AMOUNT_UNIT);
     }
   }
 
   createLotto() {
-    return new Lotto(Random.pickUniqueNumbersInRange(1, 45, 6));
+    return new Lotto(Random.pickUniqueNumbersInRange(
+      LOTTO_CONFIG.START_NUMBER,
+      LOTTO_CONFIG.END_NUMBER,
+      LOTTO_CONFIG.LENGTH,
+    ));
   }
 
   printLottos() {
-    Console.print(`${this.#lottoCount}개를 구매했습니다.`);
+    Console.print(lottoCountTemplate(this.#lottoCount));
     this.lottos.forEach((lotto) => {
       const lottoNumbers = lotto.getNumbers();
       Console.print(`[${lottoNumbers.join(', ')}]`);
@@ -66,36 +54,36 @@ class LottoMachine {
   }
 
   printResult() {
-    Console.print('\n당첨 통계');
-    Console.print('---');
+    Console.print(MESSAGES.MATCH_RESULT_START);
+    Console.print(MESSAGES.MATCH_RESULT_SEPARATOR_LINE);
     const places = Object.keys(this.result).reverse();
     for (const place of places) {
-      const matchResultMessage = createPrizeMessage(
+      const matchResultMessage = matchResultTemplate(
         LOTTO_RESULT_START_MESSAGE[place],
         LOTTO_PRIZE[place],
         this.result[place],
       )
       Console.print(matchResultMessage);
     }
-    Console.print(`총 수익률은 ${this.calculateRateOfReturn()}%입니다.`);
+    Console.print(rateOfReturnTemplate(this.calculateRateOfReturn()));
   }
 
   updateResult(matchCount, matchBonus) {
     switch (matchCount) {
-      case 3:
+      case LOTTO_MACHINE_CONFIG.FIFTH_PLACE_MATCH_COUNT:
         this.result.fifth += 1;
         break;
-      case 4:
+      case LOTTO_MACHINE_CONFIG.FOURTH_PLACE_MATCH_COUNT:
         this.result.forth += 1;
         break;
-      case 5:
+      case LOTTO_MACHINE_CONFIG.SECOND_OR_THIRD_PLACE_MATCH_COUNT:
         if (matchBonus) {
           this.result.second += 1;
           break;
         }
         this.result.third += 1;
         break
-      case 6:
+      case LOTTO_MACHINE_CONFIG.FIRST_PLACE_MATCH_COUNT:
         this.result.first += 1;
     }
   }
@@ -119,11 +107,13 @@ class LottoMachine {
 
   calculateRateOfReturn() {
     let rateOfReturn = 0;
-    const purchaseAmount = this.lottos.length * 1000;
+    const purchaseAmount = this.lottos.length * LOTTO_CONFIG.PRICE;
     const totalPrize = this.calculateTotalPrize();
     rateOfReturn = (totalPrize / purchaseAmount) * 100;
     // 둘째 자리에서 반올림하고 세 자리 마다 ',' 추가
-    const [ integerPart, decimalPart ] = rateOfReturn.toFixed(1).split('.');
+    const [ integerPart, decimalPart ] = rateOfReturn.toFixed(
+      LOTTO_MACHINE_CONFIG.RATE_OF_RETURN_DECIMAL_PLACE
+    ).split('.');
     return `${Number(integerPart).toLocaleString()}.${decimalPart}`;
   }
 }
