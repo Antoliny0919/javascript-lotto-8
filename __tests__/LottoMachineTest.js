@@ -62,7 +62,8 @@ describe('LottoMachine Tests', () => {
     .mockReturnValueOnce([10, 11, 12, 13, 14, 15]) // 5등
 
     const lottoMachine = new LottoMachine(5000);
-    const winningLotto = new WinningLotto([10, 13, 15, 17, 18, 22], 25);
+    const winningLottoNumbers = new Lotto([10, 13, 15, 17, 18, 22]);
+    const winningLotto = new WinningLotto(winningLottoNumbers, 25);
     lottoMachine.checkWinning(winningLotto);
     expect(lottoMachine.result).toEqual({
       first: 1,
@@ -79,7 +80,8 @@ describe('LottoMachine Tests', () => {
     .mockReturnValueOnce([7, 8, 9, 10, 11, 12]);
 
     const lottoMachine = new LottoMachine(2000);
-    const winningLotto = new WinningLotto([1, 2, 7, 8, 15, 16], 18);
+    const winningLottoNumbers = new Lotto([1, 2, 7, 8, 15, 16]);
+    const winningLotto = new WinningLotto(winningLottoNumbers, 18);
     lottoMachine.checkWinning(winningLotto);
     expect(lottoMachine.result).toEqual({
       first: 0,
@@ -97,7 +99,8 @@ describe('LottoMachine Tests', () => {
     .mockReturnValueOnce([7, 8, 40, 41, 42, 43]);
 
     const lottoMachine = new LottoMachine(3000);
-    const winningLotto = new WinningLotto([10, 11, 40, 41, 42, 43], 44);
+    const winningLottoNumbers = new Lotto([10, 11, 40, 41, 42, 43]);
+    const winningLotto = new WinningLotto(winningLottoNumbers, 44);
     lottoMachine.checkWinning(winningLotto);
     expect(lottoMachine.result).toEqual({
       first: 0,
@@ -114,7 +117,8 @@ describe('LottoMachine Tests', () => {
     .mockReturnValueOnce([3, 4, 5, 6, 7, 8]) // 4등
 
     const lottoMachine = new LottoMachine(2000);
-    const winningLotto = new WinningLotto([2, 3, 4, 5, 6, 10], 11);
+    const winningLottoNumbers = new Lotto([2, 3, 4, 5, 6, 10])
+    const winningLotto = new WinningLotto(winningLottoNumbers, 11);
 
     expect(lottoMachine.calculateTotalPrize()).toBe(0);
 
@@ -127,13 +131,13 @@ describe('LottoMachine Tests', () => {
     [
       {
         lottoNumbers: [[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12]],
-        winningLottoNumbers: [4, 5, 6, 7, 8, 9],
+        winningLottoNumbers: new Lotto([4, 5, 6, 7, 8, 9]),
         bonusNumber: 11,
         expectedRateOfReturn: '2,750.0',
       },
       {
         lottoNumbers: [[1, 2, 3, 4, 5, 6], [38, 39, 40, 41, 42, 43]],
-        winningLottoNumbers: [20, 21, 22, 23, 24, 25],
+        winningLottoNumbers: new Lotto([20, 21, 22, 23, 24, 25]),
         bonusNumber: 1,
         expectedRateOfReturn: '0.0',
       },
@@ -147,7 +151,7 @@ describe('LottoMachine Tests', () => {
           [1, 2, 3, 11, 22, 33],
           [1, 2, 3, 12, 22, 32],
         ],
-        winningLottoNumbers: [1, 2, 7, 8, 9, 10],
+        winningLottoNumbers: new Lotto([1, 2, 7, 8, 9, 10]),
         bonusNumber: 4,
         expectedRateOfReturn: '71.4',
       },
@@ -157,7 +161,7 @@ describe('LottoMachine Tests', () => {
           [4, 5, 6, 7, 8, 9],
           [10, 11, 12, 13, 14, 15]
         ],
-        winningLottoNumbers: [1, 2, 3, 4, 5, 6],
+        winningLottoNumbers: new Lotto([1, 2, 3, 4, 5, 6]),
         bonusNumber: 7,
         expectedRateOfReturn: '66,668,333.3',
       }
