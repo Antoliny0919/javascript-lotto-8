@@ -14,7 +14,7 @@ jest.mock('@woowacourse/mission-utils', () => ({
 describe('LottoMachine Tests', () => {
   test('객체 생성 테스트', () => {
     Random.pickUniqueNumbersInRange.mockReturnValue([1, 2, 3, 4, 5, 6]);
-    const lottoMachine = new LottoMachine(5);
+    const lottoMachine = new LottoMachine(5000);
     const lotto = lottoMachine.lottos[0];
 
     expect(lottoMachine.lottos.length).toBe(5);
@@ -22,12 +22,30 @@ describe('LottoMachine Tests', () => {
     expect(lotto.getNumbers()).toEqual([1, 2, 3, 4, 5, 6]);
   })
 
+  test('구입금액이 문자일때 예외', () => {
+    expect(() => {
+      new LottoMachine('#@&');
+    }).toThrow('[ERROR] 구입금액은 정수여야 합니다.');
+  });
+
+  test('구입금액이 양수가 아닐때 예외', () => {
+    expect(() => {
+      new LottoMachine(-3000);
+    }).toThrow('[ERROR] 구입금액은 양수여야 합니다.');
+  });
+
+  test('구입금액이 1,000원 단위가 아닐때 예외', () => {
+    expect(() => {
+      new LottoMachine(1001);
+    }).toThrow('[ERROR] 구입금액은 1,000원 단위여야 합니다.');
+  });
+
   test('발행한 로또 출력 테스트', () => {
     Random.pickUniqueNumbersInRange
     .mockReturnValueOnce([10, 11, 12, 13, 14, 15])
     .mockReturnValueOnce([20, 21, 22, 23, 24, 25]);
 
-    const lottoMachine = new LottoMachine(2);
+    const lottoMachine = new LottoMachine(2000);
     lottoMachine.printLottos();
 
     expect(Console.print).toHaveBeenCalled();
@@ -43,7 +61,7 @@ describe('LottoMachine Tests', () => {
     .mockReturnValueOnce([13, 14, 15, 16, 17, 18]) // 4등
     .mockReturnValueOnce([10, 11, 12, 13, 14, 15]) // 5등
 
-    const lottoMachine = new LottoMachine(5);
+    const lottoMachine = new LottoMachine(5000);
     const winningLotto = new WinningLotto([10, 13, 15, 17, 18, 22], 25);
     lottoMachine.checkWinning(winningLotto);
     expect(lottoMachine.result).toEqual({
@@ -60,7 +78,7 @@ describe('LottoMachine Tests', () => {
     .mockReturnValueOnce([1, 2, 3, 4, 5, 6])
     .mockReturnValueOnce([7, 8, 9, 10, 11, 12]);
 
-    const lottoMachine = new LottoMachine(2);
+    const lottoMachine = new LottoMachine(2000);
     const winningLotto = new WinningLotto([1, 2, 7, 8, 15, 16], 18);
     lottoMachine.checkWinning(winningLotto);
     expect(lottoMachine.result).toEqual({
@@ -78,7 +96,7 @@ describe('LottoMachine Tests', () => {
     .mockReturnValueOnce([4, 5, 40, 41, 42, 43])
     .mockReturnValueOnce([7, 8, 40, 41, 42, 43]);
 
-    const lottoMachine = new LottoMachine(3);
+    const lottoMachine = new LottoMachine(3000);
     const winningLotto = new WinningLotto([10, 11, 40, 41, 42, 43], 44);
     lottoMachine.checkWinning(winningLotto);
     expect(lottoMachine.result).toEqual({
@@ -95,7 +113,7 @@ describe('LottoMachine Tests', () => {
     .mockReturnValueOnce([1, 2, 3, 4, 5, 6]) // 3등
     .mockReturnValueOnce([3, 4, 5, 6, 7, 8]) // 4등
 
-    const lottoMachine = new LottoMachine(2);
+    const lottoMachine = new LottoMachine(2000);
     const winningLotto = new WinningLotto([2, 3, 4, 5, 6, 10], 11);
 
     expect(lottoMachine.calculateTotalPrize()).toBe(0);
@@ -149,7 +167,7 @@ describe('LottoMachine Tests', () => {
       Random.pickUniqueNumbersInRange.mockReturnValueOnce(numbers)
     }
 
-    const lottoMachine = new LottoMachine(lottoNumbers.length);
+    const lottoMachine = new LottoMachine(lottoNumbers.length * 1000);
     const winningLotto = new WinningLotto(winningLottoNumbers, bonusNumber);
 
     lottoMachine.checkWinning(winningLotto)
@@ -158,7 +176,7 @@ describe('LottoMachine Tests', () => {
   });
 
   test('결과 출력 테스트', () => {
-    const lottoMachine = new LottoMachine(50);
+    const lottoMachine = new LottoMachine(50000);
     lottoMachine.result = {
       first: 0,
       second: 0,

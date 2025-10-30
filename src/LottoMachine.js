@@ -20,9 +20,13 @@ const LOTTO_PRIZE = {
 }
 
 class LottoMachine {
-  constructor(lottoCount) {
+  #lottoCount;
+
+  constructor(paymentAmount) {
+    this.#validatePaymentAmount(paymentAmount);
+    this.#lottoCount = paymentAmount / 1000;
     this.lottos = Array.from(
-      { length: lottoCount },
+      { length: this.#lottoCount },
       () => this.createLotto(),
     )
     this.result = {
@@ -34,11 +38,24 @@ class LottoMachine {
     }
   }
 
+  #validatePaymentAmount(paymentAmount) {
+    if (!Number.isInteger(paymentAmount)) {
+      throw new Error('[ERROR] 구입금액은 정수여야 합니다.')
+    }
+    if (paymentAmount <= 0) {
+      throw new Error('[ERROR] 구입금액은 양수여야 합니다.')
+    }
+    if (paymentAmount % 1000) {
+      throw new Error('[ERROR] 구입금액은 1,000원 단위여야 합니다.')
+    }
+  }
+
   createLotto() {
     return new Lotto(Random.pickUniqueNumbersInRange(1, 45, 6));
   }
 
   printLottos() {
+    Console.print(`${this.#lottoCount}개를 구매했습니다.`);
     this.lottos.forEach((lotto) => {
       const lottoNumbers = lotto.getNumbers();
       Console.print(`[${lottoNumbers.join(', ')}]`);
