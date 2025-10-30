@@ -8,9 +8,9 @@ import { Lotto } from './Lotto.js';
 class LottoMachine {
   constructor(paymentAmount) {
     this.#validatePaymentAmount(paymentAmount);
-    this.lottoCount = paymentAmount / LOTTO_CONFIG.PRICE;
+    const lottoCount = paymentAmount / LOTTO_CONFIG.PRICE;
     this.lottos = Array.from(
-      { length: this.lottoCount },
+      { length: lottoCount },
       () => this.createLotto(),
     )
     this.result = {
@@ -44,7 +44,7 @@ class LottoMachine {
   }
 
   printLottos() {
-    Console.print(lottoCountTemplate(this.lottoCount));
+    Console.print(lottoCountTemplate(this.lottos.length));
     this.lottos.forEach((lotto) => {
       const lottoNumbers = lotto.getNumbers();
       Console.print(`[${lottoNumbers.join(', ')}]`);
@@ -104,7 +104,7 @@ class LottoMachine {
   }
 
   calculateRateOfReturn() {
-    const purchaseAmount = this.lottoCount * LOTTO_CONFIG.PRICE;
+    const purchaseAmount = this.lottos.length * LOTTO_CONFIG.PRICE;
     const totalPrize = this.calculateTotalPrize();
     const rateOfReturn = (totalPrize / purchaseAmount) * 100;
     // 둘째 자리에서 반올림하고 세 자리 마다 ',' 추가
