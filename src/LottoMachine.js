@@ -1,7 +1,9 @@
 import { Random, Console } from '@woowacourse/mission-utils';
 import { Lotto } from './Lotto.js';
 
-const createPrizeMessage = (startMessage, prize, count) => `${startMessage} (${prize.toLocaleString()}원) - ${count}개`;
+const createPrizeMessage = (startMessage, prize, count) => {
+  return `${startMessage} (${prize.toLocaleString()}원) - ${count}개`;
+}
 
 const LOTTO_RESULT_START_MESSAGE = {
   first: '6개 일치',
