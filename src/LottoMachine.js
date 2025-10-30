@@ -6,13 +6,11 @@ import { lottoCountTemplate, rateOfReturnTemplate, matchResultTemplate } from '.
 import { Lotto } from './Lotto.js';
 
 class LottoMachine {
-  #lottoCount;
-
   constructor(paymentAmount) {
     this.#validatePaymentAmount(paymentAmount);
-    this.#lottoCount = paymentAmount / LOTTO_CONFIG.PRICE;
+    this.lottoCount = paymentAmount / LOTTO_CONFIG.PRICE;
     this.lottos = Array.from(
-      { length: this.#lottoCount },
+      { length: this.lottoCount },
       () => this.createLotto(),
     )
     this.result = {
@@ -46,7 +44,7 @@ class LottoMachine {
   }
 
   printLottos() {
-    Console.print(lottoCountTemplate(this.#lottoCount));
+    Console.print(lottoCountTemplate(this.lottoCount));
     this.lottos.forEach((lotto) => {
       const lottoNumbers = lotto.getNumbers();
       Console.print(`[${lottoNumbers.join(', ')}]`);
