@@ -28,12 +28,13 @@ export class Lotto {
   // TODO: 추가 기능 구현
 }
 
-export class WinningLotto extends Lotto {
+export class WinningLotto {
+  #lotto;
   #bonusNumber;
 
-  constructor(numbers, bonusNumber) {
-    super(numbers);
-    this.#validateBonusNumber(numbers, bonusNumber);
+  constructor(lotto, bonusNumber) {
+    this.#lotto = lotto;
+    this.#validateBonusNumber(this.#lotto.getNumbers(), bonusNumber);
     this.#bonusNumber = bonusNumber;
   }
 
@@ -50,7 +51,7 @@ export class WinningLotto extends Lotto {
   }
 
   getNumbers() {
-    return [...super.getNumbers(), this.#bonusNumber];
+    return [...this.#lotto.getNumbers(), this.#bonusNumber];
   }
 
   getBonusNumber() {
