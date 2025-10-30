@@ -1,7 +1,7 @@
 import App from '../src/App.js';
 import { MissionUtils } from '@woowacourse/mission-utils';
 
-const mockQuestions = (inputs) => {
+export const mockQuestions = (inputs) => {
   MissionUtils.Console.readLineAsync = jest.fn();
 
   MissionUtils.Console.readLineAsync.mockImplementation(() => {
@@ -11,14 +11,14 @@ const mockQuestions = (inputs) => {
   });
 };
 
-const mockRandoms = (numbers) => {
+export const mockRandoms = (numbers) => {
   MissionUtils.Random.pickUniqueNumbersInRange = jest.fn();
   numbers.reduce((acc, number) => {
     return acc.mockReturnValueOnce(number);
   }, MissionUtils.Random.pickUniqueNumbersInRange);
 };
 
-const getLogSpy = () => {
+export const getLogSpy = () => {
   const logSpy = jest.spyOn(MissionUtils.Console, 'print');
   logSpy.mockClear();
   return logSpy;
@@ -93,145 +93,5 @@ describe('로또 테스트', () => {
 
   test('예외 테스트', async () => {
     await runException('1000j');
-  });
-});
-
-describe('구입금액 입력 예외 테스트', () => {
-  test.each(['1000원', '천원', '1thousand', '**&^#@', '1.32', '1000.32'])('정수가 아닌 입력 예외', async(input) => {
-    mockQuestions([input]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 구입금액은 정수여야 합니다.');
-  });
-
-  test.each(['-1000', '0', '-1'])('양수가 아닌 입력 예외', async(input) => {
-    mockQuestions([input]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 구입금액은 양수여야 합니다.');
-  });
-
-  test.each(['1500', '3421', '10040', '1001', '500', '1000400'])('1,000원 단위가 아닌 엽력 예외', async(input) => {
-    mockQuestions([input]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 구입금액은 1,000원 단위여야 합니다.');
-  });
-});
-
-describe('당첨 번호 입력 예외 테스트', () => {
-
-  const PURCHASE_AMOUNT = '1000'
-  const RANDOM_LOTTO_NUMBER = [1, 2, 3, 4, 5, 6];
-
-  test.each([
-    '십칠,십구,하나,둘,넷,여섯',
-    'one,two,three,four,five,six,seven',
-    '@@%&&%^^&',
-    '0.1,0.2,0.3,0.4,0.5,0.6',
-  ])('숫자가 아닌 입력 예외', async(input) => {
-    mockQuestions([PURCHASE_AMOUNT, input]);
-    mockRandoms([RANDOM_LOTTO_NUMBER]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 당첨 번호는 정수만 입력 가능합니다.');
-  });
-
-  test.each(
-    [
-      '43,11,42,12,18,33,1',
-      '1,2',
-      '1,3,5',
-      '',
-    ]
-  )(',을 기준으로 6개 숫자가 아닌 입력 예외', async(input) => {
-    mockQuestions([PURCHASE_AMOUNT, input]);
-    mockRandoms([RANDOM_LOTTO_NUMBER]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 당첨 번호는 ,을 기준으로 6개 숫자만 입력해 주세요.');
-  });
-
-  test.each(
-    [
-      '0,1,2,3,4,5',
-      '1,5,8,11,13,66',
-      '-1,5,7,9,10,-13',
-      '1, ,2,3,4,5',
-      ' , , , , , ',
-      '100000,20000,30000,44000,5000,6000',
-      '-1,-2,-3,-4,-5,-6',
-    ]
-  )(',을 기준으로 6개 숫자가 아닌 입력 예외', async(input) => {
-    mockQuestions([PURCHASE_AMOUNT, input]);
-    mockRandoms([RANDOM_LOTTO_NUMBER]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 당첨 번호는 1이상 45이하인 숫자여야 합니다.');
-  });
-
-  test.each(
-    [
-      '1,2,3,4,5,1',
-      '11,22,33,44,11,22',
-      '1,1,1,1,1,1',
-    ]
-  )('중복된 번호 입력 예외', async(input) => {
-    mockQuestions([PURCHASE_AMOUNT, input]);
-    mockRandoms([RANDOM_LOTTO_NUMBER]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 중복된 당첨 번호가 존재합니다.');
-  })
-});
-
-describe('보너스 번호 입력 예외 테스트', () => {
-  const PURCHASE_AMOUNT = '1000';
-  const WINNING_LOTTO_NUMBERS = '1,5,10,15,20,25';
-  const RANDOM_LOTTO_NUMBER = [1, 2, 3, 4, 5, 6];
-
-  test.each(
-    ['십칠', '11.11', '**', 'seven', ',', '*,&,']
-  )('숫자가 아닌 입력 예외', async(input) => {
-    mockQuestions([PURCHASE_AMOUNT, WINNING_LOTTO_NUMBERS, input]);
-    mockRandoms([RANDOM_LOTTO_NUMBER]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 보너스 번호는 정수만 입력 가능합니다.');
-  });
-
-  test.each(
-    ['-1', '99', '0', '46', '', '         ']
-  )('1 ~ 45 이내 숫자가 아닌 입력 예외', async(input) => {
-    mockQuestions([PURCHASE_AMOUNT, WINNING_LOTTO_NUMBERS, input]);
-    mockRandoms([RANDOM_LOTTO_NUMBER]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 보너스 번호는 1이상 45이하인 숫자여야 합니다.');
-  });
-
-  test.each(
-    [
-      ['1,2,3,4,5,6', '1'],
-      ['5,9,14,16,19,24', '16'],
-      ['1,10,18,25,30,34', '34'],
-      ['1,33,34,40,41,45', '45'],
-    ]
-  )('당첨 번호와 중복되는 입력 예외', async(winningNumbers, bonnusNumber) => {
-    mockQuestions([PURCHASE_AMOUNT, winningNumbers, bonnusNumber]);
-    mockRandoms([RANDOM_LOTTO_NUMBER]);
-
-    const app = new App();
-
-    await expect(app.run()).rejects.toThrow('[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.');
   });
 });
