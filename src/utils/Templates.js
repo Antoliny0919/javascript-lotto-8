@@ -1,4 +1,4 @@
-export const lottoCountTemplate = (count) => `${count}개를 구매했습니다.`;
+export const lottoCountTemplate = (count) => `\n${count}개를 구매했습니다.`;
 
 export const rateOfReturnTemplate = (rateOfReturn) => `총 수익률은 ${rateOfReturn}%입니다.`;
 
