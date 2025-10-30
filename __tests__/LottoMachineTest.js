@@ -12,7 +12,25 @@ jest.mock('@woowacourse/mission-utils', () => ({
 }));
 
 describe('LottoMachine Tests', () => {
-  test('객체 생성 테스트', () => {
+  test('구입금액이 문자일때 예외가 발생한다.', () => {
+    expect(() => {
+      new LottoMachine('#@&');
+    }).toThrow('[ERROR] 구입금액은 정수여야 합니다.');
+  });
+
+  test('구입금액이 양수가 아닐때 예외가 발생한다.', () => {
+    expect(() => {
+      new LottoMachine(-3000);
+    }).toThrow('[ERROR] 구입금액은 양수여야 합니다.');
+  });
+
+  test('구입금액이 1,000원 단위가 아닐때 예외가 발생한다.', () => {
+    expect(() => {
+      new LottoMachine(1001);
+    }).toThrow('[ERROR] 구입금액은 1,000원 단위여야 합니다.');
+  });
+
+  test('객체 생성시 로또를 발행한다.', () => {
     Random.pickUniqueNumbersInRange.mockReturnValue([1, 2, 3, 4, 5, 6]);
     const lottoMachine = new LottoMachine(5000);
     const lotto = lottoMachine.lottos[0];
@@ -20,27 +38,9 @@ describe('LottoMachine Tests', () => {
     expect(lottoMachine.lottos.length).toBe(5);
     expect(lotto).toBeInstanceOf(Lotto);
     expect(lotto.getNumbers()).toEqual([1, 2, 3, 4, 5, 6]);
-  })
-
-  test('구입금액이 문자일때 예외', () => {
-    expect(() => {
-      new LottoMachine('#@&');
-    }).toThrow('[ERROR] 구입금액은 정수여야 합니다.');
   });
 
-  test('구입금액이 양수가 아닐때 예외', () => {
-    expect(() => {
-      new LottoMachine(-3000);
-    }).toThrow('[ERROR] 구입금액은 양수여야 합니다.');
-  });
-
-  test('구입금액이 1,000원 단위가 아닐때 예외', () => {
-    expect(() => {
-      new LottoMachine(1001);
-    }).toThrow('[ERROR] 구입금액은 1,000원 단위여야 합니다.');
-  });
-
-  test('발행한 로또 출력 테스트', () => {
+  test('발행한 로또 목록을 출력한다.', () => {
     Random.pickUniqueNumbersInRange
     .mockReturnValueOnce([10, 11, 12, 13, 14, 15])
     .mockReturnValueOnce([20, 21, 22, 23, 24, 25]);
@@ -53,7 +53,7 @@ describe('LottoMachine Tests', () => {
     expect(Console.print).toHaveBeenCalledWith('[20, 21, 22, 23, 24, 25]');
   });
 
-  test('발행한 로또와 당첨 번호 비교 테스트(당첨된 경우)', () => {
+  test('발행한 로또와 당첨 번호를 비교하여 결과를 업데이트한다(당첨된 경우).', () => {
     Random.pickUniqueNumbersInRange
     .mockReturnValueOnce([10, 13, 15, 17, 18, 22]) // 1등
     .mockReturnValueOnce([10, 13, 14, 17, 18, 25]) // 2등
@@ -74,7 +74,7 @@ describe('LottoMachine Tests', () => {
     });
   });
 
-  test('발행한 로또와 당첨 번호 비교 테스트(당첨되지 않은 경우)', () => {
+  test('발행한 로또와 당첨 번호를 비교하여 결과를 업데이트한다(당첨되지 않은 경우).', () => {
     Random.pickUniqueNumbersInRange
     .mockReturnValueOnce([1, 2, 3, 4, 5, 6])
     .mockReturnValueOnce([7, 8, 9, 10, 11, 12]);
@@ -92,7 +92,7 @@ describe('LottoMachine Tests', () => {
     });
   });
 
-  test('발행한 로또와 당첨 번호 비교 테스트(한 등수가 여러개 당첨된 경우)', () => {
+  test('발행한 로또와 당첨 번호를 비교하여 결과를 업데이트한다(한 등수가 여러개 당첨된 경우).', () => {
     Random.pickUniqueNumbersInRange
     .mockReturnValueOnce([1, 2, 40, 41, 42, 43])
     .mockReturnValueOnce([4, 5, 40, 41, 42, 43])
@@ -111,7 +111,7 @@ describe('LottoMachine Tests', () => {
     });
   });
 
-  test('총 수익 계산 테스트', () => {
+  test('당첨 결과를 기반으로 총 수익을 계산한다.', () => {
     const lottoMachine = new LottoMachine(2000);
 
     expect(lottoMachine.calculateTotalPrize()).toBe(0);
@@ -150,7 +150,7 @@ describe('LottoMachine Tests', () => {
         expectedRateOfReturn: '66,668,333.3',
       },
     ]
-  )('수익률 계산 테스트', ({ lottoCount, result, expectedRateOfReturn }) => {
+  )('총 당첨금액을 통해 수익률을 계산한다.', ({ lottoCount, result, expectedRateOfReturn }) => {
 
     const lottoMachine = new LottoMachine(lottoCount * 1000);
     lottoMachine.result = result;
@@ -158,7 +158,7 @@ describe('LottoMachine Tests', () => {
     expect(lottoMachine.calculateRateOfReturn()).toBe(expectedRateOfReturn);
   });
 
-  test('결과 출력 테스트', () => {
+  test('최종 결과를 출력한다.', () => {
     const lottoMachine = new LottoMachine(50000);
     lottoMachine.result = {
       first: 0,
