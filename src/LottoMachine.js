@@ -41,13 +41,13 @@ class LottoMachine {
 
   #validatePaymentAmount(paymentAmount) {
     if (!Number.isInteger(paymentAmount)) {
-      throw new Error('[ERROR] 구입금액은 정수여야 합니다.')
+      throw new Error('[ERROR] 구입금액은 정수여야 합니다.');
     }
     if (paymentAmount <= 0) {
-      throw new Error('[ERROR] 구입금액은 양수여야 합니다.')
+      throw new Error('[ERROR] 구입금액은 양수여야 합니다.');
     }
     if (paymentAmount % 1000) {
-      throw new Error('[ERROR] 구입금액은 1,000원 단위여야 합니다.')
+      throw new Error('[ERROR] 구입금액은 1,000원 단위여야 합니다.');
     }
   }
 
@@ -75,7 +75,7 @@ class LottoMachine {
       )
       Console.print(matchResultMessage);
     }
-    Console.print(`총 수익률은 ${this.calculateRateOfReturn()}%입니다.`)
+    Console.print(`총 수익률은 ${this.calculateRateOfReturn()}%입니다.`);
   }
 
   updateResult(matchCount, matchBonus) {
