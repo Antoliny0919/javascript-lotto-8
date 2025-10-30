@@ -14,6 +14,18 @@ describe('로또 클래스 테스트', () => {
     }).toThrow('[ERROR]');
   });
 
+  test('로또 번호에 문자가 존재하면 예외가 발생한다.', () => {
+    expect(() => {
+      new Lotto([1, 'zz', 3, 4, '&&', 5]);
+    }).toThrow('[ERROR]');
+  });
+
+  test('로또 번호가 1 ~ 45 이내 숫자가 아닐 경우 예외가 발생한다.', () => {
+    expect(() => {
+      new Lotto([1, 2, 3, 4, 5, 46]);
+    }).toThrow('[ERROR]');
+  });
+
   test('로또 번호 오름차순 정렬 테스트', () => {
     const lotto = new Lotto([43, 11, 38, 15, 1, 4]);
     expect(lotto.getNumbers()).toEqual([1, 4, 11, 15, 38, 43]);
