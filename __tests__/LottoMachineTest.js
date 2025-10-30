@@ -112,69 +112,48 @@ describe('LottoMachine Tests', () => {
   });
 
   test('총 수익 계산 테스트', () => {
-    Random.pickUniqueNumbersInRange
-    .mockReturnValueOnce([1, 2, 3, 4, 5, 6]) // 3등
-    .mockReturnValueOnce([3, 4, 5, 6, 7, 8]) // 4등
-
     const lottoMachine = new LottoMachine(2000);
-    const winningLottoNumbers = new Lotto([2, 3, 4, 5, 6, 10])
-    const winningLotto = new WinningLotto(winningLottoNumbers, 11);
 
     expect(lottoMachine.calculateTotalPrize()).toBe(0);
 
-    lottoMachine.checkWinning(winningLotto)
+    lottoMachine.result = {
+      first: 1,
+      second: 2,
+      third: 3,
+      fourth: 4,
+      fifth: 5,
+    }
 
-    expect(lottoMachine.calculateTotalPrize()).toBe(1_550_000);
+    expect(lottoMachine.calculateTotalPrize()).toBe(2_064_725_000);
   });
 
   test.each(
     [
       {
-        lottoNumbers: [[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12]],
-        winningLottoNumbers: new Lotto([4, 5, 6, 7, 8, 9]),
-        bonusNumber: 11,
+        lottoCount: 2,
+        result: {first: 0, second: 0, third: 0, fourth: 1, fifth: 1},
         expectedRateOfReturn: '2,750.0',
       },
       {
-        lottoNumbers: [[1, 2, 3, 4, 5, 6], [38, 39, 40, 41, 42, 43]],
-        winningLottoNumbers: new Lotto([20, 21, 22, 23, 24, 25]),
-        bonusNumber: 1,
+        lottoCount: 2,
+        result: {first: 0, second: 0, third: 0, fourth: 0, fifth: 0},
         expectedRateOfReturn: '0.0',
       },
       {
-        lottoNumbers: [
-          [1, 2, 3, 4, 5, 6],
-          [1, 2, 3, 11, 12, 13],
-          [1, 2, 3, 21, 22, 23],
-          [1, 2, 3, 31, 32, 33],
-          [1, 2, 3, 41, 42, 43],
-          [1, 2, 3, 11, 22, 33],
-          [1, 2, 3, 12, 22, 32],
-        ],
-        winningLottoNumbers: new Lotto([1, 2, 7, 8, 9, 10]),
-        bonusNumber: 4,
+        lottoCount: 7,
+        result: {first: 0, second: 0, third: 0, fourth: 0, fifth: 1},
         expectedRateOfReturn: '71.4',
       },
       {
-        lottoNumbers: [
-          [1, 2, 3, 4, 5, 6],
-          [4, 5, 6, 7, 8, 9],
-          [10, 11, 12, 13, 14, 15]
-        ],
-        winningLottoNumbers: new Lotto([1, 2, 3, 4, 5, 6]),
-        bonusNumber: 7,
+        lottoCount: 3,
+        result: {first: 1, second: 0, third: 0, fourth: 1, fifth: 0},
         expectedRateOfReturn: '66,668,333.3',
-      }
+      },
     ]
-  )('수익률 계산 테스트', ({ lottoNumbers, winningLottoNumbers, bonusNumber, expectedRateOfReturn }) => {
-    for ( numbers of lottoNumbers ) {
-      Random.pickUniqueNumbersInRange.mockReturnValueOnce(numbers)
-    }
+  )('수익률 계산 테스트', ({ lottoCount, result, expectedRateOfReturn }) => {
 
-    const lottoMachine = new LottoMachine(lottoNumbers.length * 1000);
-    const winningLotto = new WinningLotto(winningLottoNumbers, bonusNumber);
-
-    lottoMachine.checkWinning(winningLotto)
+    const lottoMachine = new LottoMachine(lottoCount * 1000);
+    lottoMachine.result = result;
 
     expect(lottoMachine.calculateRateOfReturn()).toBe(expectedRateOfReturn);
   });

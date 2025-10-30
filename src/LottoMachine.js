@@ -104,7 +104,7 @@ class LottoMachine {
   }
 
   calculateRateOfReturn() {
-    const purchaseAmount = this.lottos.length * LOTTO_CONFIG.PRICE;
+    const purchaseAmount = this.lottoCount * LOTTO_CONFIG.PRICE;
     const totalPrize = this.calculateTotalPrize();
     const rateOfReturn = (totalPrize / purchaseAmount) * 100;
     // 둘째 자리에서 반올림하고 세 자리 마다 ',' 추가
