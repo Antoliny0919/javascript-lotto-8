@@ -36,6 +36,7 @@ class LottoMachine {
       forth: 0,
       fifth: 0,
     }
+    this.printLottos();
   }
 
   #validatePaymentAmount(paymentAmount) {

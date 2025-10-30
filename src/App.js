@@ -1,17 +1,28 @@
-import { Console, Random } from '@woowacourse/mission-utils';
 import LottoMachine from './LottoMachine.js';
 import { Lotto, WinningLotto } from './Lotto.js';
+import Input from './Input.js';
 
 class App {
+  constructor() {
+    this.inputHandler = new Input();
+  }
+
   async run() {
-    const purchaseAmount = await Console.readLineAsync('구입금액을 입력해 주세요.');
-    const lottoMachine = new LottoMachine(Number(purchaseAmount));
-    const winningNumbersInput = await Console.readLineAsync('\n당첨 번호를 입력해 주세요.\n');
-    const winningNumbers = winningNumbersInput.split(',').map((ele) => Number(ele));
-    const lotto = new Lotto(winningNumbers);
-    const bonnusNumberInput = await Console.readLineAsync('\n보너스 번호를 입력해 주세요.\n');
-    const bonnusNumber = Number(bonnusNumberInput);
-    const winningLotto = new WinningLotto(lotto, bonnusNumber);
+    const lottoMachine = await this.inputHandler.readUntilSuccess(
+      '구입금액을 입력해 주세요.\n',
+      (inputPaymentAmount) => new LottoMachine(Number(inputPaymentAmount)),
+    );
+    const winningLottoNumbers = await this.inputHandler.readUntilSuccess(
+      '\n당첨 번호를 입력해 주세요\n',
+      (inputLottoNumbers) => {
+        const lottoNumbers = inputLottoNumbers.split(',').map((ele) => Number(ele));
+        return new Lotto(lottoNumbers)
+      }
+    );
+    const winningLotto = await this.inputHandler.readUntilSuccess(
+      '\n보너스 번호를 입력해 주세요.\n',
+      (inputBonusNumber) => new WinningLotto(winningLottoNumbers, Number(inputBonusNumber))
+    );
     lottoMachine.checkWinning(winningLotto);
     lottoMachine.printResult();
   }
