@@ -33,6 +33,27 @@ describe('로또 클래스 테스트', () => {
 });
 
 describe('WinningLotto Tests', () => {
+
+  const WINNING_LOTTO_NUMBERS = [1, 2, 3, 4, 5, 6];
+
+  test('보너스 번호가 문자일때 예외', () => {
+    expect(() => {
+      new WinningLotto(WINNING_LOTTO_NUMBERS, '십칠');
+    }).toThrow('[ERROR] 보너스 번호는 정수만 입력 가능합니다.');
+  });
+
+  test('보너스 번호가 1 ~ 45 이내 숫자가 아닐 경우 예외', () => {
+    expect(() => {
+      new WinningLotto(WINNING_LOTTO_NUMBERS, 46);
+    }).toThrow('[ERROR] 보너스 번호는 1이상 45이하인 숫자여야 합니다.');
+  });
+
+  test('보너스 번호가 당첨 번호와 중복될때 예외', () => {
+    expect(() => {
+      new WinningLotto(WINNING_LOTTO_NUMBERS, 1);
+    }).toThrow('[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.');
+  });
+
   test('당첨 번호 로또 getNumbers메서드 반환값 테스트', () => {
     const winningLotto = new WinningLotto([1, 2, 3, 4, 5, 6], 7);
     expect(winningLotto.getNumbers()).toEqual([1, 2, 3, 4, 5, 6, 7]);
