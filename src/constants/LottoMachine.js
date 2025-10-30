@@ -2,7 +2,7 @@ export const LOTTO_RESULT_START_MESSAGE = Object.freeze({
   first: '6개 일치',
   second: '5개 일치, 보너스 볼 일치',
   third: '5개 일치',
-  forth: '4개 일치',
+  fourth: '4개 일치',
   fifth: '3개 일치',
 });
 
@@ -21,7 +21,7 @@ export const LOTTO_PRIZE = Object.freeze({
   first: 2_000_000_000,
   second: 30_000_000,
   third: 1_500_000,
-  forth: 50_000,
+  fourth: 50_000,
   fifth: 5_000,
 });
 

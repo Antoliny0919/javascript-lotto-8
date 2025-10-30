@@ -19,7 +19,7 @@ class LottoMachine {
       first: 0,
       second: 0,
       third: 0,
-      forth: 0,
+      fourth: 0,
       fifth: 0,
     }
     this.printLottos();
@@ -74,7 +74,7 @@ class LottoMachine {
         this.result.fifth += 1;
         break;
       case LOTTO_MACHINE_CONFIG.FOURTH_PLACE_MATCH_COUNT:
-        this.result.forth += 1;
+        this.result.fourth += 1;
         break;
       case LOTTO_MACHINE_CONFIG.SECOND_OR_THIRD_PLACE_MATCH_COUNT:
         if (matchBonus) {

@@ -69,7 +69,7 @@ describe('LottoMachine Tests', () => {
       first: 1,
       second: 1,
       third: 1,
-      forth: 1,
+      fourth: 1,
       fifth: 1,
     });
   });
@@ -87,7 +87,7 @@ describe('LottoMachine Tests', () => {
       first: 0,
       second: 0,
       third: 0,
-      forth: 0,
+      fourth: 0,
       fifth: 0,
     });
   });
@@ -106,7 +106,7 @@ describe('LottoMachine Tests', () => {
       first: 0,
       second: 0,
       third: 0,
-      forth: 3,
+      fourth: 3,
       fifth: 0,
     });
   });
@@ -185,7 +185,7 @@ describe('LottoMachine Tests', () => {
       first: 0,
       second: 0,
       third: 1,
-      forth: 2,
+      fourth: 2,
       fifth: 3,
     }
     lottoMachine.printResult();
