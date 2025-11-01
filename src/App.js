@@ -16,7 +16,7 @@ class App {
     const winningLottoNumbers = await this.inputHandler.readUntilSuccess(
       INPUT_MESSAGES.WINNING_NUMBER,
       (inputLottoNumbers) => {
-        const lottoNumbers = inputLottoNumbers.split(',').map((ele) => Number(ele));
+        const lottoNumbers = inputLottoNumbers.split(',').map((el) => Number(el));
         return new Lotto(lottoNumbers)
       }
     );
