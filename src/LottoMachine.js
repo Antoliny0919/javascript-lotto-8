@@ -67,23 +67,19 @@ class LottoMachine {
   }
 
   updateResult(matchCount, matchBonus) {
-    switch (matchCount) {
-      case LOTTO_MACHINE_CONFIG.FIFTH_PLACE_MATCH_COUNT:
-        this.result.fifth += 1;
-        break;
-      case LOTTO_MACHINE_CONFIG.FOURTH_PLACE_MATCH_COUNT:
-        this.result.fourth += 1;
-        break;
-      case LOTTO_MACHINE_CONFIG.SECOND_OR_THIRD_PLACE_MATCH_COUNT:
-        if (matchBonus) {
-          this.result.second += 1;
-          break;
-        }
-        this.result.third += 1;
-        break
-      case LOTTO_MACHINE_CONFIG.FIRST_PLACE_MATCH_COUNT:
-        this.result.first += 1;
+    const prize = this.#determinePrize(matchCount, matchBonus);
+    if (prize) {
+      this.result[prize] += 1;
     }
+  }
+
+  #determinePrize(matchCount, matchBonus) {
+    if (matchCount === 6) return 'first';
+    if (matchCount === 5 && matchBonus) return 'second';
+    if (matchCount === 5) return 'third';
+    if (matchCount === 4) return 'fourth';
+    if (matchCount === 3) return 'fifth';
+    return null;
   }
 
   checkWinning(winningLotto) {
