@@ -1,8 +1,7 @@
-import { Random, Console } from '@woowacourse/mission-utils';
-import { LOTTO_PRIZE, LOTTO_RESULT_START_MESSAGE } from './constants/LottoMachine.js';
+import { Random } from '@woowacourse/mission-utils';
+import { LOTTO_PRIZE } from './constants/LottoMachine.js';
 import { LOTTO_CONFIG } from './constants/lotto.js';
-import { LOTTO_MACHINE_CONFIG, MESSAGES, ERROR_MESSAGES } from './constants/LottoMachine.js';
-import { lottoCountTemplate, rateOfReturnTemplate, matchResultTemplate } from './utils/Templates.js';
+import { LOTTO_MACHINE_CONFIG, ERROR_MESSAGES } from './constants/LottoMachine.js';
 import { Lotto } from './Lotto.js';
 
 class LottoMachine {
@@ -20,7 +19,6 @@ class LottoMachine {
       fourth: 0,
       fifth: 0,
     }
-    this.printLottos();
   }
 
   #validatePaymentAmount(paymentAmount) {
@@ -41,29 +39,6 @@ class LottoMachine {
       LOTTO_CONFIG.END_NUMBER,
       LOTTO_CONFIG.LENGTH,
     ));
-  }
-
-  printLottos() {
-    Console.print(lottoCountTemplate(this.lottos.length));
-    this.lottos.forEach((lotto) => {
-      const lottoNumbers = lotto.getNumbers();
-      Console.print(`[${lottoNumbers.join(', ')}]`);
-    });
-  }
-
-  printResult() {
-    Console.print(MESSAGES.MATCH_RESULT_START);
-    Console.print(MESSAGES.MATCH_RESULT_SEPARATOR_LINE);
-    const places = Object.keys(this.result).reverse();
-    for (const place of places) {
-      const matchResultMessage = matchResultTemplate(
-        LOTTO_RESULT_START_MESSAGE[place],
-        LOTTO_PRIZE[place],
-        this.result[place],
-      )
-      Console.print(matchResultMessage);
-    }
-    Console.print(rateOfReturnTemplate(this.calculateRateOfReturn()));
   }
 
   updateResult(matchCount, matchBonus) {

@@ -1,4 +1,5 @@
 import LottoMachine from './LottoMachine.js';
+import LottoPrinter from './LottoPrinter.js';
 import { Lotto, WinningLotto } from './Lotto.js';
 import { INPUT_MESSAGES } from './constants/Messages.js';
 import Input from './Input.js';
@@ -13,6 +14,7 @@ class App {
       INPUT_MESSAGES.PAYMENT_AMOUNT,
       (inputPaymentAmount) => new LottoMachine(Number(inputPaymentAmount)),
     );
+    LottoPrinter.printLottos(lottoMachine.lottos);
     const winningLottoNumbers = await this.inputHandler.readUntilSuccess(
       INPUT_MESSAGES.WINNING_NUMBER,
       (inputLottoNumbers) => {
@@ -25,7 +27,7 @@ class App {
       (inputBonusNumber) => new WinningLotto(winningLottoNumbers, Number(inputBonusNumber))
     );
     lottoMachine.checkWinning(winningLotto);
-    lottoMachine.printResult();
+    LottoPrinter.printResult(lottoMachine.result, lottoMachine.calculateRateOfReturn());
   }
 }
 

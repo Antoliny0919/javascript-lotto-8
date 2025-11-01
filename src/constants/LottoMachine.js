@@ -1,16 +1,3 @@
-export const LOTTO_RESULT_START_MESSAGE = Object.freeze({
-  first: '6개 일치',
-  second: '5개 일치, 보너스 볼 일치',
-  third: '5개 일치',
-  fourth: '4개 일치',
-  fifth: '3개 일치',
-});
-
-export const MESSAGES = Object.freeze({
-  MATCH_RESULT_START: '\n당첨 통계',
-  MATCH_RESULT_SEPARATOR_LINE: '---',
-});
-
 export const ERROR_MESSAGES = Object.freeze({
   INVALID_TYPE: '[ERROR] 구입금액은 정수여야 합니다.',
   INVALID_NEGATIVE_NUMBER: '[ERROR] 구입금액은 양수여야 합니다.',

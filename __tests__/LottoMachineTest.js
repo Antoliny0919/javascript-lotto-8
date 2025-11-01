@@ -40,19 +40,6 @@ describe('LottoMachine Tests', () => {
     expect(lotto.getNumbers()).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
-  test('발행한 로또 목록을 출력한다.', () => {
-    Random.pickUniqueNumbersInRange
-    .mockReturnValueOnce([10, 11, 12, 13, 14, 15])
-    .mockReturnValueOnce([20, 21, 22, 23, 24, 25]);
-
-    const lottoMachine = new LottoMachine(2000);
-    lottoMachine.printLottos();
-
-    expect(Console.print).toHaveBeenCalled();
-    expect(Console.print).toHaveBeenCalledWith('[10, 11, 12, 13, 14, 15]');
-    expect(Console.print).toHaveBeenCalledWith('[20, 21, 22, 23, 24, 25]');
-  });
-
   test('발행한 로또와 당첨 번호를 비교하여 결과를 업데이트한다(당첨된 경우).', () => {
     Random.pickUniqueNumbersInRange
     .mockReturnValueOnce([10, 13, 15, 17, 18, 22]) // 1등
@@ -156,26 +143,5 @@ describe('LottoMachine Tests', () => {
     lottoMachine.result = result;
 
     expect(lottoMachine.calculateRateOfReturn()).toBe(expectedRateOfReturn);
-  });
-
-  test('최종 결과를 출력한다.', () => {
-    const lottoMachine = new LottoMachine(50000);
-    lottoMachine.result = {
-      first: 0,
-      second: 0,
-      third: 1,
-      fourth: 2,
-      fifth: 3,
-    }
-    lottoMachine.printResult();
-
-    expect(Console.print).toHaveBeenCalledWith('\n당첨 통계');
-    expect(Console.print).toHaveBeenCalledWith('---');
-    expect(Console.print).toHaveBeenCalledWith('3개 일치 (5,000원) - 3개');
-    expect(Console.print).toHaveBeenCalledWith('4개 일치 (50,000원) - 2개');
-    expect(Console.print).toHaveBeenCalledWith('5개 일치 (1,500,000원) - 1개');
-    expect(Console.print).toHaveBeenCalledWith('5개 일치, 보너스 볼 일치 (30,000,000원) - 0개');
-    expect(Console.print).toHaveBeenCalledWith('6개 일치 (2,000,000,000원) - 0개');
-    expect(Console.print).toHaveBeenCalledWith('총 수익률은 3,230.0%입니다.');
   });
 });
