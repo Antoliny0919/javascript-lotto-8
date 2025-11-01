@@ -11,7 +11,7 @@ jest.mock('@woowacourse/mission-utils', () => ({
 describe('Input Tests', () => {
   const input = new Input();
 
-  test('에러 발생시 입력을 다시 시도한다.', async () => {
+  test('에러 발생시 입력을 다시 시도합니다.', async () => {
     Console.readLineAsync
     .mockResolvedValueOnce('error')
     .mockResolvedValueOnce('success');
@@ -26,15 +26,19 @@ describe('Input Tests', () => {
     expect(Console.readLineAsync).toHaveBeenCalledTimes(2);
   });
 
-  test('콜백을 통해 입력값을 후처리 한다.', async () => {
-    Console.readLineAsync.mockResolvedValueOnce('apple');
+  test('transformer전달 여부에 따라 입력값이 가공되어 반환됩니다.', async () => {
+    Console.readLineAsync.mockResolvedValueOnce('apple').mockResolvedValueOnce('banana');
 
-    const response = await input.readUntilSuccess('입력', (value) => {
+    const hasTransformer = await input.readUntilSuccess('입력', (value) => {
       return {
         red: value
       }
     });
 
-    expect(response).toEqual({'red': 'apple'});
-  })
+    expect(hasTransformer).toEqual({'red': 'apple'});
+
+    const hasNotTransformer = await input.readUntilSuccess('입력');
+
+    expect(hasNotTransformer).toBe('banana');
+  });
 });

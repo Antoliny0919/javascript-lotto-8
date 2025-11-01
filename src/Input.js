@@ -4,22 +4,27 @@ class Input {
 
   /**
    * 사용자의 입력을 받고 에러 발생시 다시 입력을 받습니다.
-   * `callback` 파라미터로 입력된값을 통해 이후 동작을 정의합니다.
    * 
    * @param {string} message - 사용자에게 표시할 입력 메시지 
-   * @param {function} callback - 입력값을 통한 후처리 함수
-   * @returns 
+   * @param {function} transformer - 입력값을 가공하여 값을 반환하는 콜백 함수
    */
-  async readUntilSuccess(message, callback) {
+  async readUntilSuccess(message, transformer = null) {
     while (true) {
       try {
         const input = await Console.readLineAsync(message);
-        const callbackResult = callback(input);
-        return callbackResult;
+        return this.#transformInput(input, transformer);
       } catch (err) {
         Console.print(err.message);
       }
     }
+  }
+
+  #transformInput(input, transformer) {
+    if (transformer === null) {
+      return input;
+    }
+
+    return transformer(input);
   }
 }
 
