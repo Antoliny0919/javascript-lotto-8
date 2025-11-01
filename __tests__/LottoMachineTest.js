@@ -165,6 +165,6 @@ describe('LottoMachine Tests', () => {
 
     lottoMachine.checkWinning(winningLotto);
 
-    expect(lottoMachine.calculateRateOfReturn()).toBe(expectedRateOfReturn);
+    expect(lottoMachine.getFormattedRateOfReturn()).toBe(expectedRateOfReturn);
   });
 });

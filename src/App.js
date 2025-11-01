@@ -27,7 +27,7 @@ class App {
       (inputBonusNumber) => new WinningLotto(winningLottoNumbers, Number(inputBonusNumber))
     );
     lottoMachine.checkWinning(winningLotto);
-    LottoPrinter.printResult(lottoMachine.getResult(), lottoMachine.calculateRateOfReturn());
+    LottoPrinter.printResult(lottoMachine.getResult(), lottoMachine.getFormattedRateOfReturn());
   }
 }
 

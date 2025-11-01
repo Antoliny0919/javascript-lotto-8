@@ -85,15 +85,23 @@ class LottoMachine {
     return totalPrize;
   }
 
-  calculateRateOfReturn() {
-    const purchaseAmount = this.#lottos.length * LOTTO_CONFIG.PRICE;
-    const totalPrize = this.calculateTotalPrize();
-    const rateOfReturn = (totalPrize / purchaseAmount) * 100;
+  getFormattedRateOfReturn() {
+    const rateOfReturn = this.#calculateRateOfReturn();
+    return this.#formatRateOfReturn(rateOfReturn);
+  }
+
+  #formatRateOfReturn(rateOfReturn) {
     // 둘째 자리에서 반올림하고 세 자리 마다 ',' 추가
     const [ integerPart, decimalPart ] = rateOfReturn.toFixed(
       LOTTO_MACHINE_CONFIG.RATE_OF_RETURN_DECIMAL_PLACE
     ).split('.');
     return `${Number(integerPart).toLocaleString()}.${decimalPart}`;
+  }
+
+  #calculateRateOfReturn() {
+    const purchaseAmount = this.#lottos.length * LOTTO_CONFIG.PRICE;
+    const totalPrize = this.calculateTotalPrize();
+    return (totalPrize / purchaseAmount) * 100;
   }
 }
 
