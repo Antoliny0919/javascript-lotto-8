@@ -2,6 +2,7 @@ import LottoMachine from './LottoMachine.js';
 import LottoPrinter from './LottoPrinter.js';
 import { Lotto, WinningLotto } from './Lotto.js';
 import { INPUT_MESSAGES } from './constants/Messages.js';
+import { LOTTO_NUMBER_SEPARATOR } from './constants/lotto.js';
 import Input from './Input.js';
 
 class App {
@@ -18,7 +19,7 @@ class App {
     const winningLottoNumbers = await this.inputHandler.readUntilSuccess(
       INPUT_MESSAGES.WINNING_NUMBER,
       (inputLottoNumbers) => {
-        const lottoNumbers = inputLottoNumbers.split(',').map((el) => Number(el));
+        const lottoNumbers = inputLottoNumbers.split(LOTTO_NUMBER_SEPARATOR).map((el) => Number(el));
         return new Lotto(lottoNumbers)
       }
     );
