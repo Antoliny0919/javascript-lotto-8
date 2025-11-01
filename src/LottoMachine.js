@@ -10,7 +10,7 @@ class LottoMachine {
     const lottoCount = paymentAmount / LOTTO_CONFIG.PRICE;
     this.lottos = Array.from(
       { length: lottoCount },
-      () => this.createLotto(),
+      () => this.#createLotto(),
     )
     this.result = {
       first: 0,
@@ -33,7 +33,7 @@ class LottoMachine {
     }
   }
 
-  createLotto() {
+  #createLotto() {
     return new Lotto(Random.pickUniqueNumbersInRange(
       LOTTO_CONFIG.START_NUMBER,
       LOTTO_CONFIG.END_NUMBER,
