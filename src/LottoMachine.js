@@ -5,20 +5,31 @@ import { LOTTO_MACHINE_CONFIG, ERROR_MESSAGES } from './constants/LottoMachine.j
 import { Lotto } from './Lotto.js';
 
 class LottoMachine {
+  #lottos
+  #result
+
   constructor(paymentAmount) {
     this.#validatePaymentAmount(paymentAmount);
     const lottoCount = paymentAmount / LOTTO_CONFIG.PRICE;
-    this.lottos = Array.from(
+    this.#lottos = Array.from(
       { length: lottoCount },
       () => this.#createLotto(),
     )
-    this.result = {
+    this.#result = {
       first: 0,
       second: 0,
       third: 0,
       fourth: 0,
       fifth: 0,
     }
+  }
+
+  getLottos() {
+    return [...this.#lottos];
+  }
+
+  getResult() {
+    return { ...this.#result }
   }
 
   #validatePaymentAmount(paymentAmount) {
@@ -41,10 +52,10 @@ class LottoMachine {
     ));
   }
 
-  updateResult(matchCount, matchBonus) {
+  #updateResult(matchCount, matchBonus) {
     const prize = this.#determinePrize(matchCount, matchBonus);
     if (prize) {
-      this.result[prize] += 1;
+      this.#result[prize] += 1;
     }
   }
 
@@ -58,24 +69,24 @@ class LottoMachine {
   }
 
   checkWinning(winningLotto) {
-    this.lottos.forEach((lotto) => {
+    this.#lottos.forEach((lotto) => {
       const lottoNumbers = lotto.getNumbers();
       const matchBonus = lottoNumbers.includes(winningLotto.getBonusNumber());
       const matchNumbers = new Set(lottoNumbers).intersection(new Set(winningLotto.getNumbers()));
-      this.updateResult(matchNumbers.size, matchBonus);
+      this.#updateResult(matchNumbers.size, matchBonus);
     });
   }
 
   calculateTotalPrize() {
     let totalPrize = 0;
-    Object.keys(this.result).forEach((place) => {
-      totalPrize += LOTTO_PRIZE[place] * this.result[place];
+    Object.keys(this.#result).forEach((place) => {
+      totalPrize += LOTTO_PRIZE[place] * this.#result[place];
     });
     return totalPrize;
   }
 
   calculateRateOfReturn() {
-    const purchaseAmount = this.lottos.length * LOTTO_CONFIG.PRICE;
+    const purchaseAmount = this.#lottos.length * LOTTO_CONFIG.PRICE;
     const totalPrize = this.calculateTotalPrize();
     const rateOfReturn = (totalPrize / purchaseAmount) * 100;
     // 둘째 자리에서 반올림하고 세 자리 마다 ',' 추가

@@ -14,7 +14,7 @@ class App {
       INPUT_MESSAGES.PAYMENT_AMOUNT,
       (inputPaymentAmount) => new LottoMachine(Number(inputPaymentAmount)),
     );
-    LottoPrinter.printLottos(lottoMachine.lottos);
+    LottoPrinter.printLottos(lottoMachine.getLottos());
     const winningLottoNumbers = await this.inputHandler.readUntilSuccess(
       INPUT_MESSAGES.WINNING_NUMBER,
       (inputLottoNumbers) => {
@@ -27,7 +27,7 @@ class App {
       (inputBonusNumber) => new WinningLotto(winningLottoNumbers, Number(inputBonusNumber))
     );
     lottoMachine.checkWinning(winningLotto);
-    LottoPrinter.printResult(lottoMachine.result, lottoMachine.calculateRateOfReturn());
+    LottoPrinter.printResult(lottoMachine.getResult(), lottoMachine.calculateRateOfReturn());
   }
 }
 

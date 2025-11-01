@@ -33,9 +33,9 @@ describe('LottoMachine Tests', () => {
   test('객체 생성시 로또를 발행한다.', () => {
     Random.pickUniqueNumbersInRange.mockReturnValue([1, 2, 3, 4, 5, 6]);
     const lottoMachine = new LottoMachine(5000);
-    const lotto = lottoMachine.lottos[0];
+    const lotto = lottoMachine.getLottos()[0];
 
-    expect(lottoMachine.lottos.length).toBe(5);
+    expect(lottoMachine.getLottos().length).toBe(5);
     expect(lotto).toBeInstanceOf(Lotto);
     expect(lotto.getNumbers()).toEqual([1, 2, 3, 4, 5, 6]);
   });
@@ -52,7 +52,7 @@ describe('LottoMachine Tests', () => {
     const winningLottoNumbers = new Lotto([10, 13, 15, 17, 18, 22]);
     const winningLotto = new WinningLotto(winningLottoNumbers, 25);
     lottoMachine.checkWinning(winningLotto);
-    expect(lottoMachine.result).toEqual({
+    expect(lottoMachine.getResult()).toEqual({
       first: 1,
       second: 1,
       third: 1,
@@ -70,7 +70,7 @@ describe('LottoMachine Tests', () => {
     const winningLottoNumbers = new Lotto([1, 2, 7, 8, 15, 16]);
     const winningLotto = new WinningLotto(winningLottoNumbers, 18);
     lottoMachine.checkWinning(winningLotto);
-    expect(lottoMachine.result).toEqual({
+    expect(lottoMachine.getResult()).toEqual({
       first: 0,
       second: 0,
       third: 0,
@@ -89,7 +89,7 @@ describe('LottoMachine Tests', () => {
     const winningLottoNumbers = new Lotto([10, 11, 40, 41, 42, 43]);
     const winningLotto = new WinningLotto(winningLottoNumbers, 44);
     lottoMachine.checkWinning(winningLotto);
-    expect(lottoMachine.result).toEqual({
+    expect(lottoMachine.getResult()).toEqual({
       first: 0,
       second: 0,
       third: 0,
@@ -99,48 +99,71 @@ describe('LottoMachine Tests', () => {
   });
 
   test('당첨 결과를 기반으로 총 수익을 계산한다.', () => {
-    const lottoMachine = new LottoMachine(2000);
+    Random.pickUniqueNumbersInRange
+    .mockReturnValueOnce([1, 2, 3, 4, 5, 6]) // 1등
+    .mockReturnValueOnce([1, 2, 3, 4, 7, 8]) // 2등
+    .mockReturnValueOnce([1, 2, 3, 4, 5, 8]) // 3등
+    .mockReturnValueOnce([1, 2, 3, 4, 9, 10]) // 4등
+    .mockReturnValueOnce([1, 2, 3, 10, 11, 12]) // 5등
+    .mockReturnValueOnce([1, 2, 3, 33, 34, 35]); // 5등
+
+    const lottoMachine = new LottoMachine(6000);
+    const winningLottoNumbers = new Lotto([1, 2, 3, 4, 5, 6]);
+    const winningLotto = new WinningLotto(winningLottoNumbers, 7);
 
     expect(lottoMachine.calculateTotalPrize()).toBe(0);
 
-    lottoMachine.result = {
-      first: 1,
-      second: 2,
-      third: 3,
-      fourth: 4,
-      fifth: 5,
-    }
+    lottoMachine.checkWinning(winningLotto);
 
-    expect(lottoMachine.calculateTotalPrize()).toBe(2_064_725_000);
+    expect(lottoMachine.calculateTotalPrize()).toBe(2_031_560_000);
   });
 
   test.each(
     [
       {
+        lottoNumbers: [
+          [1, 2, 3, 4, 10, 11],
+          [1, 2, 3, 10, 11, 12],
+        ],
         lottoCount: 2,
-        result: {first: 0, second: 0, third: 0, fourth: 1, fifth: 1},
         expectedRateOfReturn: '2,750.0',
       },
       {
+        lottoNumbers: [
+          [10, 11, 12, 13, 14, 15],
+          [20, 21, 22, 23, 24, 25],
+        ],
         lottoCount: 2,
-        result: {first: 0, second: 0, third: 0, fourth: 0, fifth: 0},
         expectedRateOfReturn: '0.0',
       },
       {
+        lottoNumbers: [
+          [1, 2, 3, 10, 11, 12],
+        ],
         lottoCount: 7,
-        result: {first: 0, second: 0, third: 0, fourth: 0, fifth: 1},
         expectedRateOfReturn: '71.4',
       },
       {
+        lottoNumbers: [
+          [1, 2, 3, 4, 5, 6],
+          [1, 2, 3, 4, 10, 11],
+        ],
         lottoCount: 3,
-        result: {first: 1, second: 0, third: 0, fourth: 1, fifth: 0},
         expectedRateOfReturn: '66,668,333.3',
       },
     ]
-  )('총 당첨금액을 통해 수익률을 계산한다.', ({ lottoCount, result, expectedRateOfReturn }) => {
+  )('총 당첨금액을 통해 수익률을 계산한다.', ({ lottoNumbers, lottoCount, expectedRateOfReturn }) => {
+    lottoNumbers.forEach((lottoNumber) => {
+      Random.pickUniqueNumbersInRange.mockReturnValueOnce(lottoNumber);
+    });
+
+    Random.pickUniqueNumbersInRange.mockReturnValue([30, 31, 32, 33, 34, 35]);
 
     const lottoMachine = new LottoMachine(lottoCount * 1000);
-    lottoMachine.result = result;
+    const winningLottoNumbers = new Lotto([1, 2, 3, 4, 5, 6]);
+    const winningLotto = new WinningLotto(winningLottoNumbers, 7);
+
+    lottoMachine.checkWinning(winningLotto);
 
     expect(lottoMachine.calculateRateOfReturn()).toBe(expectedRateOfReturn);
   });
