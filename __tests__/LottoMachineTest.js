@@ -1,4 +1,4 @@
-import { Random, Console } from '@woowacourse/mission-utils';
+import { Random } from '@woowacourse/mission-utils';
 import LottoMachine from '../src/LottoMachine.js';
 import { Lotto, WinningLotto } from '../src/Lotto.js';
 
