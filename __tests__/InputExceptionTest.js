@@ -1,23 +1,23 @@
-import { mockQuestions, mockRandoms, getLogSpy } from './ApplicationTest.js';
+import { Console, Random } from '@woowacourse/mission-utils';
 import App from '../src/App.js';
+
+jest.mock('@woowacourse/mission-utils');
 
 const SOME_PAYMENT_AMOUNT = '1000';
 const SOME_WINNING_NUMBERS = '1,2,3,4,5,6';
 const SOME_BONUS_NUMBER = '7';
 
 const runException = async (inputs, expectedMessage) => {
-  // given
-  const logSpy = getLogSpy();
 
-  mockRandoms([[1, 2, 3, 4, 5, 6]]);
-  mockQuestions(inputs);
+  Random.pickUniqueNumbersInRange.mockReturnValueOnce([1, 2, 3, 4, 5, 6]);
+  inputs.forEach((input) => {
+    Console.readLineAsync.mockResolvedValueOnce(input);
+  })
 
-  // when
   const app = new App();
   await app.run();
 
-  // then
-  expect(logSpy).toHaveBeenCalledWith(expectedMessage);
+  expect(Console.print).toHaveBeenCalledWith(expectedMessage);
 };
 
 describe('구입금액 입력 예외 테스트', () => {
