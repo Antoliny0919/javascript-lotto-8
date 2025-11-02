@@ -2,7 +2,7 @@ import LottoMachine from './LottoMachine.js';
 import LottoPrinter from './LottoPrinter.js';
 import { Lotto, WinningLotto } from './Lotto.js';
 import { INPUT_MESSAGES } from './constants/Messages.js';
-import { LOTTO_NUMBER_SEPARATOR } from './constants/lotto.js';
+import { LOTTO_NUMBER_SEPARATOR } from './constants/Lotto.js';
 import Input from './Input.js';
 
 class App {

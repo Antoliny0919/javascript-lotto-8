@@ -1,5 +1,5 @@
 import { BONUS_NUMBER_ERROR_MESSAGES, LOTTO_ERROR_MESSAGES } from './constants/Messages.js';
-import { LOTTO_CONFIG } from './constants/lotto.js';
+import { LOTTO_CONFIG } from './constants/Lotto.js';
 
 export class Lotto {
   #numbers;
